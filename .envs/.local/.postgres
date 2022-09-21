@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=data_pipeline_manager
+POSTGRES_USER=TOftEdZsApQzPOiffUNUbfvXbbhOBjpD
+POSTGRES_PASSWORD=OPQdyHkqgrdVXgAL4dJEwrEYv534wMECDWVrdkvmrMxMQxHG8mzEckA1lCYCfcbJ
