@@ -8,21 +8,24 @@ class PipelineTypes(models.TextChoices):
     IMPORT = "I", _("Import")
     REIMPORT = "R", _("Reimport")
 
+
 class TaskStatus(models.TextChoices):
-    PENDING = "P", _("Pending")
     RUNNING = "R", _("Running")
     SUCCESS = "S", _("Success")
     FAILURE = "F", _("Failure")
 
 
 class Task(models.Model):
-    task_id = models.CharField(max_length=32)
+    celery_task_id = models.CharField(max_length=36)
     name = models.CharField(max_length=255)
     started_on = models.DateTimeField(auto_now_add=True)
     pipeline_type = models.CharField(
         max_length=1, choices=PipelineTypes.choices, default=PipelineTypes.IMPORT
     )
     pipeline_config = models.JSONField()
+    status = models.CharField(
+        max_length=1, choices=TaskStatus.choices, default=TaskStatus.RUNNING
+    )
     completed_on = models.DateTimeField(null=True, blank=True)
     result = models.CharField(max_length=32, null=True, blank=True)
     error = models.TextField(null=True, blank=True)
@@ -31,13 +34,5 @@ class Task(models.Model):
         return self.name
 
     @property
-    def status(self):
-        if self.error:
-            return TaskStatus.FAILURE
-        if self.completed_on:
-            return TaskStatus.SUCCESS
-        return TaskStatus.RUNNING
-
-    @property
     def is_completed(self):
-        return self.completed_on is not None
+        return self.status == TaskStatus.SUCCESS or self.status == TaskStatus.FAILURE

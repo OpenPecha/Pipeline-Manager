@@ -1,4 +1,4 @@
-local-run:
+run:
 	# make translate
 	docker-compose -f local.yml up
 
