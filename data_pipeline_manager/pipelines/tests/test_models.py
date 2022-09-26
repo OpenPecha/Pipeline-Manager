@@ -1,8 +1,15 @@
 import pytest
 
-from .factories import TaskFactory
+from .factories import BatchFactory, TaskFactory
 
 pytestmark = pytest.mark.django_db
+
+
+class TestBatchTask:
+    def test_factroy(self):
+        batch = BatchFactory()
+
+        assert batch is not None
 
 
 class TestTask:

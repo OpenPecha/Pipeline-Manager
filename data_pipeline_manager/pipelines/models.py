@@ -15,14 +15,22 @@ class TaskStatus(models.TextChoices):
     FAILURE = "F", _("Failure")
 
 
-class Task(models.Model):
-    celery_task_id = models.CharField(max_length=36)
+class BatchTask(models.Model):
+    inputs = models.TextField(max_length=10000)
     name = models.CharField(max_length=255)
     started_on = models.DateTimeField(auto_now_add=True)
+    pipeline_config = models.JSONField()
     pipeline_type = models.CharField(
         max_length=1, choices=PipelineTypes.choices, default=PipelineTypes.IMPORT
     )
-    pipeline_config = models.JSONField()
+
+
+class Task(models.Model):
+    batch = models.ForeignKey(
+        BatchTask, on_delete=models.CASCADE, blank=True, null=True
+    )
+    celery_task_id = models.CharField(max_length=36)
+    started_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=1, choices=TaskStatus.choices, default=TaskStatus.RUNNING
     )

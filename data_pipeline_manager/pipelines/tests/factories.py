@@ -1,14 +1,23 @@
+import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
 
 
+class BatchFactory(DjangoModelFactory):
+    class Meta:
+        model = "pipelines.BatchTask"
+
+    inputs = Faker("text")
+    name = Faker("name")
+    pipeline_config = Faker("json", num_rows=1)
+    pipeline_type = Faker("random_element", elements=("I", "R"))
+
+
 class TaskFactory(DjangoModelFactory):
 
+    batch = factory.SubFactory(BatchFactory)
     celery_task_id = Faker("uuid4")
-    name = Faker("name")
     started_on = Faker("date_time")
-    pipeline_type = Faker("random_element", elements=("I", "R"))
-    pipeline_config = Faker("json", num_rows=1)
     status = Faker("random_element", elements=("S", "F"))
     completed_on = Faker("date_time")
     result = Faker("pystr")
