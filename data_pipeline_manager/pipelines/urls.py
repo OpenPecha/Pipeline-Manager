@@ -5,5 +5,5 @@ from . import views
 app_name = "pipelines"
 urlpatterns = [
     path("", view=views.dashboard, name="dashboard"),
-    path("batches/", view=views.batch_task_lists, name="batch_task_lists"),
+    path("batches/", view=views.batch_task_lists_view, name="batch_tasks_list"),
 ]
