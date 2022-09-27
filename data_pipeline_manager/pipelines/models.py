@@ -1,5 +1,3 @@
-from xml.etree.ElementTree import PI
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -16,8 +14,8 @@ class TaskStatus(models.TextChoices):
 
 
 class BatchTask(models.Model):
-    inputs = models.TextField(max_length=10000)
     name = models.CharField(max_length=255)
+    inputs = models.TextField(max_length=10000)
     started_on = models.DateTimeField(auto_now_add=True)
     pipeline_config = models.JSONField()
     pipeline_type = models.CharField(
