@@ -23,3 +23,8 @@ def dashboard(request):
 
     context = {"form": form}
     return render(request, "pipelines/dashboard.html", context=context)
+
+
+def batch_task_lists(request):
+    context = {"batch_tasks": BatchTask.objects.all()}
+    return render(request, "pipelines/batch_task_lists.html", context=context)
