@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>OpenPecha Pipelines Dashboard</h1>
+
+{% include "pipelines/create_ocr_task_form.html" with form=form %}
+
+{% endblock content %}
