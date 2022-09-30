@@ -38,4 +38,4 @@ class BatchTaskListView(generic.ListView):
     context_object_name = "batch_tasks"
 
 
-batch_task_lists_view = BatchTaskListView.as_view()
+batch_task_list_view = BatchTaskListView.as_view()
