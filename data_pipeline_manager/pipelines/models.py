@@ -30,9 +30,12 @@ class BatchTask(models.Model):
     def start_celery_task(self, input, pipeling_config):
         return uuid.uuid4()
 
+    def get_inputs(self):
+        return self.inputs.split("\n")
+
     def run(self):
         """Start the Batch Task by create tasks and running them"""
-        inputs = self.inputs.split("\n")
+        inputs = self.get_inputs()
         for input in inputs:
             celery_task_id = self.start_celery_task(input, self.pipeline_config)
             Task.objects.create(batch=self, celery_task_id=celery_task_id)
