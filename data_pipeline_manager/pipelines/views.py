@@ -39,3 +39,12 @@ class BatchTaskListView(generic.ListView):
 
 
 batch_task_list_view = BatchTaskListView.as_view()
+
+
+class BatchTaskDetailView(generic.DetailView):
+    model = BatchTask
+    template_name = "pipelines/batch_task_detail.html"
+    context_object_name = "batch"
+
+
+batch_task_detail_view = BatchTaskDetailView.as_view()

@@ -27,6 +27,10 @@ class BatchTask(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_pipeline_type_display()})"
 
+    @property
+    def inputs_csv(self):
+        return self.inputs.replace("\n", ",")
+
     def start_celery_task(self, input, pipeling_config):
         return uuid.uuid4()
 
@@ -43,7 +47,7 @@ class BatchTask(models.Model):
 
 class Task(models.Model):
     batch = models.ForeignKey(
-        BatchTask, on_delete=models.CASCADE, blank=True, null=True
+        BatchTask, on_delete=models.CASCADE, blank=True, null=True, related_name="tasks"
     )
     celery_task_id = models.CharField(max_length=36)
     started_on = models.DateTimeField(auto_now_add=True)

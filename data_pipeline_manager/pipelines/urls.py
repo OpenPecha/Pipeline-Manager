@@ -6,4 +6,5 @@ app_name = "pipelines"
 urlpatterns = [
     path("", view=views.dashboard, name="dashboard"),
     path("batches/", view=views.batch_task_list_view, name="batch_tasks_list"),
+    path("batches/<int:pk>/", view=views.batch_task_detail_view, name="batch_detail"),
 ]

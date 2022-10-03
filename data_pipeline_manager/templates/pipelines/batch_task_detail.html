@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title  %}Batch Detail{% endblock  %}
+
+{% block content %}
+
+<h3>Batch Detail</h3>
+
+<div class="row">
+    <div class="col-4">
+        <div><strong >Name:</strong> {{ batch.name }}</div>
+        <div><strong>Started On:</strong> {{ batch.started_on }}</div>
+    </div>
+
+    <div class="col">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Inputs
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {{ batch.inputs_csv }}
+                </div>
+            </div>
+            </div>
+            <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Pipeline Config
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {{ batch.pipeline_config }}
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <table class="table table-hover table-light">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Status</th>
+            <th scope="col">Started On</th>
+            <th scope="col">Completed On</th>
+            <th scope="col">Result</th>
+            <th scope="col">Error</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in batch.tasks.all %}
+            <tr>
+                <th scope="row">{{ task.id }}</th>
+                <td>{{ task.get_status_display }}</td>
+                <td>{{ task.started_on }}</td>
+                <td>
+                    {% if task.completed_on %}
+                        {{ task.completed_on }}
+                    {% else %}
+                        <span>-</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.result %}
+                        {{ task.result }}
+                    {% else %}
+                        <span>-</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.error %}
+                        {{ task.error }}
+                    {% else %}
+                        <span>-</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+{% endblock %}
