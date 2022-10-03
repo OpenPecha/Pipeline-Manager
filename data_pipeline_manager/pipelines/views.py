@@ -20,7 +20,7 @@ def dashboard(request):
                     "model_name": OCR_MODELS[form.cleaned_data["model_name"]],
                 },
             )
-            batch.save()
+            batch.run()
             return HttpResponseRedirect(reverse_lazy("pipelines:dashboard"))
     else:
         form = OCRTaskForm()

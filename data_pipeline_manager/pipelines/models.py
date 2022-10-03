@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -22,6 +24,19 @@ class BatchTask(models.Model):
         max_length=1, choices=PipelineTypes.choices, default=PipelineTypes.IMPORT
     )
 
+    def __str__(self):
+        return f"{self.name} ({self.get_pipeline_type_display()})"
+
+    def start_celery_task(self, input, pipeling_config):
+        return uuid.uuid4()
+
+    def run(self):
+        """Start the Batch Task by create tasks and running them"""
+        inputs = self.inputs.split("\n")
+        for input in inputs:
+            celery_task_id = self.start_celery_task(input, self.pipeline_config)
+            Task.objects.create(batch=self, celery_task_id=celery_task_id)
+
 
 class Task(models.Model):
     batch = models.ForeignKey(
@@ -37,7 +52,7 @@ class Task(models.Model):
     error = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return str(self.id)
 
     @property
     def is_completed(self):
