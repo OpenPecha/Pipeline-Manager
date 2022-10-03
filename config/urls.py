@@ -3,12 +3,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", RedirectView.as_view(url="/pipelines"), name="home"),
     path(
         "catalog/",
         TemplateView.as_view(template_name="pages/catalog.html"),
