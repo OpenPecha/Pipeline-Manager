@@ -80,7 +80,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "data_pipeline_manager.users",
-    # Your stuff: custom apps go here
+    "data_pipeline_manager.pipelines",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -295,7 +295,9 @@ ACCOUNT_FORMS = {"signup": "data_pipeline_manager.users.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "data_pipeline_manager.users.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "data_pipeline_manager.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {
+    "signup": "data_pipeline_manager.users.forms.UserSocialSignupForm"
+}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------

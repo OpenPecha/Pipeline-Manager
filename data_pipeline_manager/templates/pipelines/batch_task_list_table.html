@@ -1,0 +1,24 @@
+<table class="table table-hover table-light">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Started</th>
+        <th scope="col">Inputs</th>
+        <th scope="col">Pipeline Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for batch in batch_tasks %}
+        <tr>
+            <th scope="row">
+                <a href="{% url 'pipelines:batch_detail' batch.id %}">{{ batch.id }}</a>
+            </th>
+            <td>{{ batch.name }}</td>
+            <td>{{ batch.started_on }}</td>
+            <td>{{ batch.inputs|truncatechars:30 }}</td>
+            <td>{{ batch.get_pipeline_type_display }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
