@@ -16,6 +16,7 @@ class BatchFactory(DjangoModelFactory):
 class TaskFactory(DjangoModelFactory):
 
     batch = factory.SubFactory(BatchFactory)
+    input = Faker("text")
     celery_task_id = Faker("uuid4")
     started_on = Faker("date_time")
     status = Faker("random_element", elements=("S", "F"))

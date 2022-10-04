@@ -28,14 +28,14 @@ class BatchTask(models.Model):
         return f"{self.name} ({self.get_pipeline_type_display()})"
 
     @property
-    def inputs_csv(self):
-        return self.inputs.replace("\n", ",")
+    def inputs_list(self):
+        return self.get_inputs()
 
     def start_celery_task(self, input, pipeling_config):
         return uuid.uuid4()
 
     def get_inputs(self):
-        return self.inputs.split("\n")
+        return [input for input in self.inputs.splitlines() if input]
 
     def run(self):
         """Start the Batch Task by create tasks and running them"""
@@ -64,7 +64,7 @@ class Task(models.Model):
     )
 
     def __str__(self):
-        return str(self.input)
+        return f"Task {self.input}"
 
     @property
     def is_completed(self):
