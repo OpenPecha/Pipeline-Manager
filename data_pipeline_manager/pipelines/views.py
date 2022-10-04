@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import OCR_ENGINES, OCR_MODELS, OCRTaskForm
-from .models import BatchTask, PipelineTypes
+from .models import BatchTask, PipelineTypes, Task
 
 
 def dashboard(request):
@@ -48,3 +48,12 @@ class BatchTaskDetailView(generic.DetailView):
 
 
 batch_task_detail_view = BatchTaskDetailView.as_view()
+
+
+class TaskDetailView(generic.DetailView):
+    model = Task
+    template_name = "pipelines/task_detail.html"
+    context_object_name = "task"
+
+
+task_detail_view = TaskDetailView.as_view()

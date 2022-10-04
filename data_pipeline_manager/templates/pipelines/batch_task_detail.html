@@ -59,7 +59,9 @@
         <tbody>
         {% for task in batch.tasks.all %}
             <tr>
-                <th scope="row">{{ task.id }}</th>
+                <td scope="row">
+                    <a href="{% url 'pipelines:task_detail' task.id %}">{{ task.id }}</a>
+                </td>
                 <td>{{ task.input }}</td>
                 <td>{{ task.get_status_display }}</td>
                 <td>{{ task.started_on }}</td>
