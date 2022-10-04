@@ -21,7 +21,7 @@ class TestBatchTask:
 
         batch.run()
 
-        assert batch.task_set.count() == 3
+        assert batch.tasks.count() == 3
 
 
 class TestTask:
