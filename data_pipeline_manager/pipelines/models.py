@@ -42,7 +42,11 @@ class BatchTask(models.Model):
         inputs = self.get_inputs()
         for input in inputs:
             celery_task_id = self.start_celery_task(input, self.pipeline_config)
-            Task.objects.create(batch=self, celery_task_id=celery_task_id)
+            Task.objects.create(
+                batch=self,
+                celery_task_id=celery_task_id,
+                input=input,
+            )
 
 
 class Task(models.Model):
@@ -51,15 +55,16 @@ class Task(models.Model):
     )
     celery_task_id = models.CharField(max_length=36)
     started_on = models.DateTimeField(auto_now_add=True)
+    completed_on = models.DateTimeField(null=True, blank=True)
+    input = models.CharField(max_length=255, null=True, blank=True)
+    result = models.CharField(max_length=32, null=True, blank=True)
+    error = models.TextField(null=True, blank=True)
     status = models.CharField(
         max_length=1, choices=TaskStatus.choices, default=TaskStatus.RUNNING
     )
-    completed_on = models.DateTimeField(null=True, blank=True)
-    result = models.CharField(max_length=32, null=True, blank=True)
-    error = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.input)
 
     @property
     def is_completed(self):

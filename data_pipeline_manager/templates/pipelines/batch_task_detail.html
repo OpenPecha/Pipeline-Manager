@@ -47,17 +47,20 @@
         <thead>
         <tr>
             <th scope="col">Id</th>
+            <th scope="col">Input</th>
             <th scope="col">Status</th>
             <th scope="col">Started On</th>
             <th scope="col">Completed On</th>
             <th scope="col">Result</th>
             <th scope="col">Error</th>
+            <th scope="col" class="text-end">Celery Task Id</th>
         </tr>
         </thead>
         <tbody>
         {% for task in batch.tasks.all %}
             <tr>
                 <th scope="row">{{ task.id }}</th>
+                <td>{{ task.input }}</td>
                 <td>{{ task.get_status_display }}</td>
                 <td>{{ task.started_on }}</td>
                 <td>
@@ -81,6 +84,7 @@
                         <span>-</span>
                     {% endif %}
                 </td>
+                <td class="text-end">{{ task.celery_task_id }}</td>
             </tr>
         {% endfor %}
         </tbody>
