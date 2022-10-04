@@ -35,8 +35,16 @@ translate:
 test:
 	docker-compose -f local.yml run django pytest
 
+test-coverage:
+	docker-compose -f local.yml run django coverage run -m pytest
+	docker-compose -f local.yml run django coverage html
+	open htmlcov/index.html
+
 local-django-shell:
 	docker-compose -f local.yml run --rm django python manage.py shell
 
 prod-django-shell:
 	docker-compose -f production.yml run --rm django python manage.py shell
+
+type-check:
+	docker-compose -f local.yml run --rm django mypy data_pipeline_manager
