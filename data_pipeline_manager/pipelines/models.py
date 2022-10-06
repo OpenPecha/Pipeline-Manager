@@ -1,7 +1,7 @@
-import uuid
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from .tasks import run_ocr_import_pipelines
 
 
 class PipelineTypes(models.TextChoices):
@@ -31,9 +31,6 @@ class BatchTask(models.Model):
     def inputs_list(self):
         return self.get_inputs()
 
-    def start_celery_task(self, input, pipeling_config):
-        return uuid.uuid4()
-
     def get_inputs(self):
         return [input for input in self.inputs.splitlines() if input]
 
@@ -41,12 +38,12 @@ class BatchTask(models.Model):
         """Start the Batch Task by create tasks and running them"""
         inputs = self.get_inputs()
         for input in inputs:
-            celery_task_id = self.start_celery_task(input, self.pipeline_config)
-            Task.objects.create(
+            task = Task.objects.create(
                 batch=self,
-                celery_task_id=celery_task_id,
                 input=input,
+                pipeline_config=self.pipeline_config,
             )
+            task.run()
 
 
 class Task(models.Model):
@@ -57,6 +54,7 @@ class Task(models.Model):
     started_on = models.DateTimeField(auto_now_add=True)
     completed_on = models.DateTimeField(null=True, blank=True)
     input = models.CharField(max_length=255, null=True, blank=True)
+    pipeline_config = models.JSONField(null=True, blank=True)
     result = models.CharField(max_length=32, null=True, blank=True)
     error = models.TextField(null=True, blank=True)
     status = models.CharField(
@@ -65,6 +63,17 @@ class Task(models.Model):
 
     def __str__(self):
         return f"Task {self.input}"
+
+    def start_celery_task(self, task_id, input, config):
+        celery_task_id = run_ocr_import_pipelines.delay(task_id, input, **config)
+        return celery_task_id
+
+    def run(self):
+        celery_task_id = self.start_celery_task(
+            self.id, self.input, self.pipeline_config
+        )
+        self.celery_task_id = celery_task_id
+        self.save()
 
     @property
     def is_completed(self):
