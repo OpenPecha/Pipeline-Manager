@@ -26,13 +26,6 @@ class TestBatchTask:
 
         assert batch.get_inputs() == ["a", "b", "c"]
 
-    def test_run(self):
-        batch = BatchFactory(inputs="a\nb\nc")
-
-        batch.run()
-
-        assert batch.tasks.count() == 3
-
 
 class TestTask:
     def test_factory(self):

@@ -29,7 +29,6 @@ class TestBatchTaskListView:
 class TestBatchDetailView:
     def test_ok(self, rf: RequestFactory):
         batch = BatchFactory()
-        batch.run()
         request = rf.get("/fake-url")
 
         response = views.batch_task_detail_view(request, pk=batch.pk)
