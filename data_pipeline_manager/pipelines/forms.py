@@ -1,20 +1,24 @@
 from django import forms
 
-OCR_ENGINE_CHOICES = (
-    ("GV", "Google Vision"),
-    ("GB", "Google Books"),
-    ("NS", "Namsel"),
-)
+OCR_ENGINE_CHOICES = (("GV", "Google Vision"),)
 
-OCR_ENGINES = dict(OCR_ENGINE_CHOICES)
-
-OCR_MODELS = {
-    "google[bo-t-i0-handwrit]": ["bo-t-i0-handwrit"],
-    "google[bo, und-t-i0-handwrit]": ["bo", "und-t-i0-handwrit"],
-    "google[und-t-i0-handwrit]": ["und-t-i0-handwrit"],
+OCR_ENGINES = {
+    "GV": "google_vision",
 }
 
+OCR_MODELS = {
+    "Google Vision[bo-t-i0-handwrit]": ["bo-t-i0-handwrit"],
+    "Google Vision[bo, und-t-i0-handwrit]": ["bo", "und-t-i0-handwrit"],
+    "Google Vision[und-t-i0-handwrit]": ["und-t-i0-handwrit"],
+}
 OCR_MODEL_CHOICES = [(model_name, model_name) for model_name in OCR_MODELS.keys()]
+
+OCR_LANGUAGES = {
+    "Tibetan": "bo",
+    "Chinese": "zh",
+    "Devanagari": "hi",
+}
+OCR_LANGUAGES_CHOICES = [(lang, lang) for lang in OCR_LANGUAGES.keys()]
 
 
 class OCRTaskForm(forms.Form):
@@ -31,4 +35,5 @@ class OCRTaskForm(forms.Form):
         required=True,
     )
     ocr_engine = forms.ChoiceField(choices=OCR_ENGINE_CHOICES)
-    model_name = forms.ChoiceField(choices=OCR_MODEL_CHOICES)
+    model_type = forms.ChoiceField(choices=OCR_MODEL_CHOICES)
+    language_hint = forms.ChoiceField(choices=OCR_LANGUAGES_CHOICES, required=False)

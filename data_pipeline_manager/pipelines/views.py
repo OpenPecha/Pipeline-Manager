@@ -3,8 +3,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
+from ocr_pipelines.config import ImportConfig
 
-from .forms import OCR_ENGINES, OCR_MODELS, OCRTaskForm
+from .forms import OCR_ENGINES, OCR_LANGUAGES, OCR_MODELS, OCRTaskForm
 from .models import BatchTask, PipelineTypes, Task
 from .tasks import run_ocr_import_pipelines
 
@@ -12,6 +13,11 @@ from .tasks import run_ocr_import_pipelines
 class PipelineRunner:
     def __init__(self, form: forms.Form):
         self.form = form
+        self.config = ImportConfig(
+            ocr_engine=OCR_ENGINES[self.form.cleaned_data["ocr_engine"]],
+            model_type=OCR_MODELS[self.form.cleaned_data["model_type"]],
+            lang_hint=OCR_LANGUAGES[form.cleaned_data["language_hint"]],
+        )
 
     def create_batch(self) -> BatchTask:
         batch = BatchTask.objects.create(
@@ -19,8 +25,9 @@ class PipelineRunner:
             inputs=self.form.cleaned_data["inputs"],
             pipeline_type=PipelineTypes.IMPORT,
             pipeline_config={
-                "ocr_engine": OCR_ENGINES[self.form.cleaned_data["ocr_engine"]],
-                "model_name": OCR_MODELS[self.form.cleaned_data["model_name"]],
+                "ocr_engine": self.config.ocr_engine,
+                "model_type": self.config.model_type,
+                "lang_hint": self.config.lang_hint,
             },
         )
         return batch
