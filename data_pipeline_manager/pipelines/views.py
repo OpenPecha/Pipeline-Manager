@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -10,47 +12,54 @@ from .models import BatchTask, PipelineTypes, Task
 from .tasks import run_ocr_import_pipelines
 
 
+class OCRImportConfig(ImportConfig):
+    def to_dict(self):
+        return {
+            "ocr_engine": self.ocr_engine,
+            "model_type": self.model_type,
+            "language": self.lang_hint,
+        }
+
+
 class PipelineRunner:
     def __init__(self, form: forms.Form):
         self.form = form
-        self.config = ImportConfig(
+        self.data_path = Path.home() / ".pipeline_manager" / "data"
+        self.data_path.mkdir(exist_ok=True, parents=True)
+        self.config = OCRImportConfig(
             ocr_engine=OCR_ENGINES[self.form.cleaned_data["ocr_engine"]],
             model_type=OCR_MODELS[self.form.cleaned_data["model_type"]],
             lang_hint=OCR_LANGUAGES[form.cleaned_data["language_hint"]],
         )
+        self.images_dir = self.data_path / "images"
+        self.ocr_output_dir = self.data_path / "ocr_outputs"
 
     def create_batch(self) -> BatchTask:
         batch = BatchTask.objects.create(
             name=self.form.cleaned_data["name"],
             inputs=self.form.cleaned_data["inputs"],
             pipeline_type=PipelineTypes.IMPORT,
-            pipeline_config={
-                "ocr_engine": self.config.ocr_engine,
-                "model_type": self.config.model_type,
-                "lang_hint": self.config.lang_hint,
-            },
+            pipeline_config=self.config.to_dict(),
         )
         return batch
 
-    def create_task(self, input_: str, batch: BatchTask, pipeline_config: dict) -> Task:
+    def create_task(self, input_: str, batch: BatchTask) -> Task:
         task = Task.objects.create(
             batch=batch,
             input=input_,
-            pipeline_config=pipeline_config,
+            pipeline_config=self.config.to_dict(),
         )
         return task
 
-    def start_celery_task(self, task_id, input, config):
-        celery_task_id = run_ocr_import_pipelines.delay(task_id, input, **config)
+    def start_celery_task(self, task_id, input):
+        celery_task_id = run_ocr_import_pipelines.delay(task_id, input)
         return celery_task_id
 
     def run(self) -> None:
         batch = self.create_batch()
         for input in batch.inputs_list:
-            task = self.create_task(input, batch, batch.pipeline_config)
-            celery_task_id = self.start_celery_task(
-                task.id, input, task.pipeline_config
-            )
+            task = self.create_task(input, batch)
+            celery_task_id = self.start_celery_task(task.id, input)
             task.celery_task_id = celery_task_id
             task.save()
 
