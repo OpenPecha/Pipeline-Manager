@@ -24,7 +24,7 @@
                 <div class="accordion-body">
                     <div class="d-flex gap-2">
                         {% for input in batch.inputs_list %}
-                        <div class="badge bg-primary">{{ input }}</div>
+                        <div class="badge bg-primary fw-light">{{ input }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -72,11 +72,11 @@
                 </td>
                 <td>
                     {% if task.get_status_display == 'Success' %}
-                        <span class="badge bg-success">{{ task.get_status_display }}</span>
+                        <span class="badge bg-success fw-light">{{ task.get_status_display }}</span>
                     {% elif task.get_status_display == 'Running' %}
-                        <span class="badge bg-warning">{{ task.get_status_display }}</span>
+                        <span class="badge bg-warning fw-light">{{ task.get_status_display }}</span>
                     {% elif task.get_status_display == 'Failure' %}
-                        <span class="badge bg-danger">{{ task.get_status_display }}</span>
+                        <span class="badge bg-danger fw-light">{{ task.get_status_display }}</span>
                     {% endif %}
                 </td>
                 <td>{{ task.started_on }}</td>
