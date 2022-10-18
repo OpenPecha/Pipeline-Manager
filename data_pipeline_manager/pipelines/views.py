@@ -1,4 +1,3 @@
-from functools import partial
 from pathlib import Path
 
 from django import forms
@@ -6,21 +5,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from ocr_pipelines.config import ImportConfig
-from ocr_pipelines.pipelines import import_pipeline as ocr_import_pipeline
 
 from .forms import OCR_ENGINES, OCR_LANGUAGES, OCR_MODELS, OCRTaskForm
 from .models import BatchTask, PipelineTypes, Task
-from .tasks import run_ocr_import_pipelines
-
-
-class OCRImportConfig(ImportConfig):
-    def to_dict(self):
-        return {
-            "ocr_engine": self.ocr_engine,
-            "model_type": self.model_type,
-            "language": self.lang_hint,
-        }
+from .tasks import OCRImportConfig, run_ocr_import_pipelines
 
 
 class PipelineRunner:
@@ -49,28 +37,25 @@ class PipelineRunner:
         task = Task.objects.create(
             batch=batch,
             input=input_,
-            pipeline_config=self.config.to_dict,
+            pipeline_config=self.config.to_dict(),
         )
         return task
 
     def start_celery_task(self, task_id, input):
-        ocr_task_func = partial(
-            ocr_import_pipeline,
+        celery_task_id = run_ocr_import_pipelines.delay(
+            task_id,
             work_id=input,
-            config=self.config,
-            img_download_dir=self.images_dir,
-            ocr_base_dir=self.ocr_output_dir,
+            config_dict=self.config.to_dict(),
+            images_dir=str(self.images_dir),
+            ocr_output_dir=str(self.ocr_output_dir),
         )
-        celery_task_id = run_ocr_import_pipelines.delay(task_id, ocr_task_func)
         return celery_task_id
 
     def run(self) -> None:
         batch = self.create_batch()
         for input in batch.inputs_list:
             task = self.create_task(input, batch)
-            celery_task_id = self.start_celery_task(
-                task.id, input, task.pipeline_config
-            )
+            celery_task_id = self.start_celery_task(task.id, input)
             task.celery_task_id = celery_task_id
             task.save()
 
