@@ -22,7 +22,11 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    {{ batch.inputs_csv }}
+                    <div class="d-flex gap-2">
+                        {% for input in batch.inputs_list %}
+                        <div class="badge bg-primary">{{ input }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             </div>
