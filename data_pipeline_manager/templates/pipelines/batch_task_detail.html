@@ -50,32 +50,19 @@
     <table class="table table-hover table-light">
         <thead>
         <tr>
-            <th scope="col">Id</th>
             <th scope="col">Input</th>
+            <th scope="col">Result</th>
             <th scope="col">Status</th>
             <th scope="col">Started On</th>
             <th scope="col">Completed On</th>
-            <th scope="col">Result</th>
-            <th scope="col">Error</th>
-            <th scope="col" class="text-end">Celery Task Id</th>
+            <th scope="col" class="text-end">Actions</th>
         </tr>
         </thead>
+
         <tbody>
         {% for task in batch.tasks.all %}
             <tr>
-                <td scope="row">
-                    <a href="{% url 'pipelines:task_detail' task.id %}">{{ task.id }}</a>
-                </td>
                 <td>{{ task.input }}</td>
-                <td>{{ task.get_status_display }}</td>
-                <td>{{ task.started_on }}</td>
-                <td>
-                    {% if task.completed_on %}
-                        {{ task.completed_on }}
-                    {% else %}
-                        <span>-</span>
-                    {% endif %}
-                </td>
                 <td>
                     {% if task.result %}
                         {{ task.result }}
@@ -84,13 +71,25 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if task.error %}
-                        {{ task.error }}
+                    {% if task.get_status_display == 'Success' %}
+                        <span class="badge bg-success">{{ task.get_status_display }}</span>
+                    {% elif task.get_status_display == 'Running' %}
+                        <span class="badge bg-warning">{{ task.get_status_display }}</span>
+                    {% elif task.get_status_display == 'Failure' %}
+                        <span class="badge bg-danger">{{ task.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ task.started_on }}</td>
+                <td>
+                    {% if task.completed_on %}
+                        {{ task.completed_on }}
                     {% else %}
                         <span>-</span>
                     {% endif %}
                 </td>
-                <td class="text-end">{{ task.celery_task_id }}</td>
+                <td class="text-end">
+                    <a class="btn btn-info btn-sm" href="{% url 'pipelines:task_detail' task.id %}">Details</a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
