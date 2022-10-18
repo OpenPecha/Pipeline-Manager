@@ -21,7 +21,15 @@
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Status</div>
-        <div class="col">{{ task.Status }}</div>
+        <div class="col">
+            {% if task.get_status_display == 'Success' %}
+                <span class="badge bg-success">{{ task.get_status_display }}</span>
+            {% elif task.get_status_display == 'Running' %}
+                <span class="badge bg-warning">{{ task.get_status_display }}</span>
+            {% elif task.get_status_display == 'Failure' %}
+                <span class="badge bg-danger">{{ task.get_status_display }}</span>
+            {% endif %}
+        </div>
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Started</div>
@@ -29,7 +37,13 @@
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Completed</div>
-        <div class="col">{{ task.completed_on }}</div>
+        <div class="col">
+            {% if task.completed_on %}
+                {{ task.completed_on }}
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </div>
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Input</div>
@@ -37,11 +51,17 @@
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Result</div>
-        <div class="col">{{ task.result }}</div>
+        <div class="col">
+            {% if task.result %}
+                {{ task.result }}
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </div>
     </div>
     <div class="row py-3">
         <div class="col-2 text-muted">Error</div>
-        <div class="col">{{ task.error }}</div>
+        <div class="col">{{ task.error|linebreaks }}</div>
     </div>
 </div>
 
