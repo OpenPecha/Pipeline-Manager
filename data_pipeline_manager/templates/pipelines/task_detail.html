@@ -9,39 +9,59 @@
 <div class="mt-5">
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Id</div>
-        <div class="col">{{ task.id }}</div>
-    </div>
-    <div class="row py-3 border-bottom">
-        <div class="col-2 text-muted">Batch</div>
-        <div class="col">{{ task.batch.name }}</div>
-    </div>
-    <div class="row py-3 border-bottom">
-        <div class="col-2 text-muted">Celery Task</div>
-        <div class="col">{{ task.celery_task_id }} </div>
-    </div>
-    <div class="row py-3 border-bottom">
-        <div class="col-2 text-muted">Status</div>
-        <div class="col">{{ task.Status }}</div>
-    </div>
-    <div class="row py-3 border-bottom">
-        <div class="col-2 text-muted">Started</div>
-        <div class="col">{{ task.started_on }}</div>
-    </div>
-    <div class="row py-3 border-bottom">
-        <div class="col-2 text-muted">Completed</div>
-        <div class="col">{{ task.completed_on }}</div>
+        <div class="col fw-light">{{ task.id }}</div>
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Input</div>
-        <div class="col">{{ task.input }}</div>
+        <div class="col fw-light">{{ task.input }}</div>
     </div>
     <div class="row py-3 border-bottom">
         <div class="col-2 text-muted">Result</div>
-        <div class="col">{{ task.result }}</div>
+        <div class="col fw-light">
+            {% if task.result %}
+                {{ task.result }}
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row py-3 border-bottom">
+        <div class="col-2 text-muted">Batch</div>
+        <div class="col fw-light">{{ task.batch.name }}</div>
+    </div>
+    <div class="row py-3 border-bottom">
+        <div class="col-2 text-muted">Celery Task</div>
+        <div class="col fw-light">{{ task.celery_task_id }} </div>
+    </div>
+    <div class="row py-3 border-bottom">
+        <div class="col-2 text-muted">Status</div>
+        <div class="col fw-light">
+            {% if task.get_status_display == 'Success' %}
+                <span class="badge bg-success fw-light">{{ task.get_status_display }}</span>
+            {% elif task.get_status_display == 'Running' %}
+                <span class="badge bg-warning fw-light">{{ task.get_status_display }}</span>
+            {% elif task.get_status_display == 'Failure' %}
+                <span class="badge bg-danger fw-light">{{ task.get_status_display }}</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row py-3 border-bottom">
+        <div class="col-2 text-muted">Started</div>
+        <div class="col fw-light">{{ task.started_on }}</div>
+    </div>
+    <div class="row py-3 border-bottom">
+        <div class="col-2 text-muted">Completed</div>
+        <div class="col fw-light">
+            {% if task.completed_on %}
+                {{ task.completed_on }}
+            {% else %}
+                <span>-</span>
+            {% endif %}
+        </div>
     </div>
     <div class="row py-3">
         <div class="col-2 text-muted">Error</div>
-        <div class="col">{{ task.error }}</div>
+        <div class="col fw-lighter">{{ task.error|linebreaks }}</div>
     </div>
 </div>
 
