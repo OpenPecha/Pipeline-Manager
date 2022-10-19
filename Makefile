@@ -33,7 +33,7 @@ translate:
 	docker-compose -f local.yml run --rm django django-admin compilemessages --ignore .venv --ignore docs --ignore pedtrid/templates/account --ignore pedtrid/users
 
 test:
-	docker-compose -f local.yml run django pytest
+	docker-compose -f local.yml run django pytest $(args)
 
 test-coverage:
 	docker-compose -f local.yml run django coverage run -m pytest

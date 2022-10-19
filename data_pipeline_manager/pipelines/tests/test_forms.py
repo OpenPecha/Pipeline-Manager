@@ -7,7 +7,8 @@ class TestOCRTaskForm:
             "name": "Test OCR Task",
             "inputs": "01\n02\n03",
             "ocr_engine": "GV",
-            "model_name": "google[bo-t-i0-handwrit]",
+            "model_type": "Google Vision[bo-t-i0-handwrit]",
+            "language_hint": "Tibetan",
         }
 
         form = OCRTaskForm(data=data)
