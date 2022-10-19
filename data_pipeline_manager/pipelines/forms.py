@@ -34,6 +34,17 @@ class OCRTaskForm(forms.Form):
         ),
         required=True,
     )
-    ocr_engine = forms.ChoiceField(choices=OCR_ENGINE_CHOICES)
-    model_type = forms.ChoiceField(choices=OCR_MODEL_CHOICES)
-    language_hint = forms.ChoiceField(choices=OCR_LANGUAGES_CHOICES, required=False)
+    ocr_engine = forms.ChoiceField(label="OCR Engine", choices=OCR_ENGINE_CHOICES)
+    model_type = forms.ChoiceField(
+        label="Model Type", choices=OCR_MODEL_CHOICES, required=False
+    )
+    language_hint = forms.ChoiceField(
+        label="Language Hint", choices=OCR_LANGUAGES_CHOICES, required=False
+    )
+    google_vision_api_key = forms.CharField(
+        label="Google Vision API Key",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Paste your API key here", "type": "password"}
+        ),
+        required=False,
+    )
