@@ -1,9 +1,12 @@
+import json
+
 from django import forms
+from ocr_pipelines.engines import GoogleVisionEngine
 
 OCR_ENGINE_CHOICES = (("GV", "Google Vision"),)
 
 OCR_ENGINES = {
-    "GV": "google_vision",
+    "GV": GoogleVisionEngine.__name__,
 }
 
 OCR_MODELS = {
@@ -48,3 +51,18 @@ class OCRTaskForm(forms.Form):
         ),
         required=False,
     )
+
+    def clean_google_vision_api_key(self):
+        ocr_engine = self.cleaned_data.get("ocr_engine")
+        api_key_str = self.cleaned_data.get("google_vision_api_key")
+        if ocr_engine == "GV":
+            if not api_key_str:
+                raise forms.ValidationError(
+                    "Google Vision API Key is required for Google Vision OCR Engine",
+                )
+
+        try:
+            api_key_dict = json.loads(api_key_str)
+        except Exception:
+            raise forms.ValidationError("Google Vision API Key is not valid JSON")
+        return api_key_dict
