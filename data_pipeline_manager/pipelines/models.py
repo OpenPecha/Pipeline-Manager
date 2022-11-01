@@ -26,6 +26,15 @@ class BatchTask(models.Model):
     def get_inputs(self):
         return [input for input in self.inputs.splitlines() if input]
 
+    @property
+    def pipeline_config_display(self):
+        striped_config = {}
+        keys_to_exclude = ["credentials", "images_path", "ocr_outputs_path"]
+        for key, value in self.pipeline_config.items():
+            if key not in keys_to_exclude:
+                striped_config[key] = value
+        return striped_config
+
 
 class TaskStatus(models.TextChoices):
     RUNNING = "R", _("Running")

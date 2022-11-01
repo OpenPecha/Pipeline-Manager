@@ -17,6 +17,7 @@ OCR_MODELS = {
 OCR_MODEL_CHOICES = [(model_name, model_name) for model_name in OCR_MODELS.keys()]
 
 OCR_LANGUAGES = {
+    "---Select Language---": "",
     "Tibetan": "bo",
     "Chinese": "zh",
     "Devanagari": "hi",
