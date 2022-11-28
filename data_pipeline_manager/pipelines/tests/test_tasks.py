@@ -45,8 +45,6 @@ def test_run_ocr_import_pipelines(mock_ocr_import_pipeline, settings):
     kwargs = mock_ocr_import_pipeline.call_args.kwargs
     assert kwargs["bdrc_scan_id"] == bdrc_scan_id
     assert kwargs["config"].to_dict() == config.to_dict()
-    assert kwargs["images_path"] == Path("/tmp/images")
-    assert kwargs["ocr_outputs_path"] == Path("/tmp/ocr_output")
 
     completed_task = Task.objects.get(id=task.id)
     assert completed_task.result == pecha_id

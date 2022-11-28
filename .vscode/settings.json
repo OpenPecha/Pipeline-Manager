@@ -1,5 +1,7 @@
 {
     "html-css-class-completion.remoteStyleSheets": [
         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-    ]
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }
