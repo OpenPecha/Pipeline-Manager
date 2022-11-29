@@ -52,7 +52,7 @@
               <li class="nav-item active">
                 <a class="nav-link" href="{% url 'catalog' %}">Catalog</a>
               </li>
-              {% if request.user.is_authenticated %}
+              {% comment %} {% if request.user.is_authenticated %}
                 <li class="nav-item">
                   {# URL provided by django-allauth/account/urls.py #}
                   <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% translate "My Profile" %}</a>
@@ -72,7 +72,7 @@
                   {# URL provided by django-allauth/account/urls.py #}
                   <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
                 </li>
-              {% endif %}
+              {% endif %} {% endcomment %}
             </ul>
           </div>
         </div>
