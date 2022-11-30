@@ -20,7 +20,7 @@ from data_pipeline_manager.pipelines.tasks import run_ocr_import_pipelines
 class PipelineRunner:
     def __init__(self, form: forms.Form):
         self.form = form
-        self.data_path = Path("/app_data") / "ocr_pipeline" / "data"
+        self.data_path = Path.home() / ".ocr_pipeline" / "data"
         images_dir = self.data_path / "images"
         ocr_outputs_dir = self.data_path / "ocr_outputs"
         self.config = OcrImportConfig(
