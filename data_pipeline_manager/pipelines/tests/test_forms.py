@@ -9,8 +9,8 @@ class TestOCRTaskForm:
             "name": "Test OCR Task",
             "inputs": "01\n02\n03",
             "ocr_engine": "GV",
-            "model_type": "Google Vision[bo-t-i0-handwrit]",
-            "language_hint": "Tibetan",
+            "model_type": "builtin/stable",
+            "language_hint": "bo",
             "google_vision_api_key": '{"api-key": "fake-api-key"}',
         }
 
