@@ -7,12 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from ocr_pipelines.config import ImportConfig as OcrImportConfig
 
-from data_pipeline_manager.pipelines.forms import (
-    OCR_ENGINES,
-    OCR_LANGUAGES,
-    OCR_MODELS,
-    OCRTaskForm,
-)
+from data_pipeline_manager.pipelines.forms import OCR_ENGINES, OCRTaskForm
 from data_pipeline_manager.pipelines.models import BatchTask, PipelineTypes, Task
 from data_pipeline_manager.pipelines.tasks import run_ocr_import_pipelines
 
@@ -25,8 +20,8 @@ class PipelineRunner:
         ocr_outputs_dir = self.data_path / "ocr_outputs"
         self.config = OcrImportConfig(
             ocr_engine=OCR_ENGINES[self.form.cleaned_data["ocr_engine"]],
-            model_type=OCR_MODELS[self.form.cleaned_data["model_type"]],
-            lang_hint=OCR_LANGUAGES[form.cleaned_data["language_hint"]],
+            model_type=self.form.cleaned_data["model_type"],
+            lang_hint=form.cleaned_data["language_hint"],
             credentials=self.form.cleaned_data["google_vision_api_key"],
             images_path=images_dir,
             ocr_outputs_path=ocr_outputs_dir,

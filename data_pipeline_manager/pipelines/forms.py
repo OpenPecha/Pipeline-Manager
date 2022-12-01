@@ -9,20 +9,35 @@ OCR_ENGINES = {
     "GV": GoogleVisionEngine.__name__,
 }
 
-OCR_MODELS = {
-    "Google Vision[bo-t-i0-handwrit]": ["bo-t-i0-handwrit"],
-    "Google Vision[bo, und-t-i0-handwrit]": ["bo", "und-t-i0-handwrit"],
-    "Google Vision[und-t-i0-handwrit]": ["und-t-i0-handwrit"],
-}
-OCR_MODEL_CHOICES = [(model_name, model_name) for model_name in OCR_MODELS.keys()]
+OCR_MODEL_CHOICES = (
+    ("builtin/stable", "builtin/stable"),
+    ("builtin/latest", "builtin/latest"),
+    ("builtin/weekly", "builtin/weekly"),
+)
 
-OCR_LANGUAGES = {
-    "---Select Language---": "",
-    "Tibetan": "bo",
-    "Chinese": "zh",
-    "Devanagari": "hi",
-}
-OCR_LANGUAGES_CHOICES = [(lang, lang) for lang in OCR_LANGUAGES.keys()]
+OCR_LANGUAGES_CHOICES = [
+    ("bo", "Tibetan"),
+    ("zh", "Chinese"),
+    ("hi", "Devanagari"),
+]
+
+
+def add_handwiriting_options(language_choices: list[tuple[str, str]]):
+    """
+    Add handwriting options to the language choices.
+    """
+    handwriting_indentifier = "t-i0-handwrit"
+    new_language_choices = []
+    for lang_code, lang_name in language_choices:
+        new_language_choices.append((lang_code, lang_name))
+        new_language_choices.append(
+            (f"{lang_code}-{handwriting_indentifier}", f"{lang_name}-Handwriting")
+        )
+    return new_language_choices
+
+
+OCR_LANGUAGES_CHOICES = add_handwiriting_options(OCR_LANGUAGES_CHOICES)
+OCR_LANGUAGES_CHOICES.insert(0, ("", "Auto")),
 
 
 class OCRTaskForm(forms.Form):
@@ -43,7 +58,10 @@ class OCRTaskForm(forms.Form):
         label="Model Type", choices=OCR_MODEL_CHOICES, required=False
     )
     language_hint = forms.ChoiceField(
-        label="Language Hint", choices=OCR_LANGUAGES_CHOICES, required=False
+        label="Language Hint",
+        choices=OCR_LANGUAGES_CHOICES,
+        required=False,
+        initial="Auto",
     )
     google_vision_api_key = forms.CharField(
         label="Google Vision API Key",
