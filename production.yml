@@ -4,7 +4,6 @@ volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
   production_traefik: {}
-  app_data: {}
 
 services:
   django: &django
@@ -21,7 +20,6 @@ services:
       - redis
     volumes:
       - ~/.aws:/home/django/.aws
-      - app_data:/home/django/app_data:z
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
