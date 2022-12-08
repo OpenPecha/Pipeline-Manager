@@ -39,13 +39,8 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-ARG USER_ID
-ARG GROUP_ID
-
-RUN if getent group django ; then userdel -f django; groupdel django; fi &&\
-    groupadd -g ${GROUP_ID} django &&\
-    useradd -l -u ${USER_ID} -g django django &&\
-    install -d -m 0755 -o django -g django /home/django
+RUN addgroup --system django \
+    && adduser --system --ingroup django django
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -100,7 +95,5 @@ COPY --chown=django:django . ${APP_HOME}
 RUN chown django:django ${APP_HOME}
 
 USER django
-
-RUN mkdir /home/django/app_data
 
 ENTRYPOINT ["/entrypoint"]
