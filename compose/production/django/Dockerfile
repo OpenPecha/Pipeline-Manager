@@ -39,8 +39,8 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-ARG USER_ID=1000
-ARG GROUP_ID=1000
+ARG USER_ID
+ARG GROUP_ID
 
 RUN if getent group django ; then userdel -f django; groupdel django; fi &&\
     groupadd -g ${GROUP_ID} django &&\
@@ -100,5 +100,7 @@ COPY --chown=django:django . ${APP_HOME}
 RUN chown django:django ${APP_HOME}
 
 USER django
+
+RUN mkdir /home/django/app_data
 
 ENTRYPOINT ["/entrypoint"]

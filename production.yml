@@ -10,6 +10,9 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
     image: data_pipeline_manager_production_django
     platform: linux/x86_64
     depends_on:
