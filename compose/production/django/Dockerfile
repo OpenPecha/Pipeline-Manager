@@ -39,9 +39,14 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 
+RUN userdel -f django &&\
+    if getent group django ; then groupdel django; fi &&\
+    groupadd -g ${GROUP_ID} django &&\
+    useradd -l -u ${USER_ID} -g django django&&\
+    install -d -m 0755 -o django -g django /home/django
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
