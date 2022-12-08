@@ -18,6 +18,7 @@ services:
     volumes:
       - .:/app:z
       - ~/.aws:/root/.aws
+      - ./data:/root/app_data
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
