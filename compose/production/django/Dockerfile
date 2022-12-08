@@ -42,10 +42,9 @@ WORKDIR ${APP_HOME}
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
-RUN userdel -f django &&\
-    if getent group django ; then groupdel django; fi &&\
+RUN if getent group django ; then userdel -f django; groupdel django; fi &&\
     groupadd -g ${GROUP_ID} django &&\
-    useradd -l -u ${USER_ID} -g django django&&\
+    useradd -l -u ${USER_ID} -g django django &&\
     install -d -m 0755 -o django -g django /home/django
 
 # Install required system dependencies
