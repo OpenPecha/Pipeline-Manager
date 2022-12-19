@@ -41,6 +41,7 @@ OCR_LANGUAGES_CHOICES.insert(0, ("", "Auto")),
 
 
 class OCRTaskForm(forms.Form):
+
     name = forms.CharField(
         widget=forms.TextInput(attrs={"placeholder": "Name for the batch"}),
         max_length=255,
@@ -69,6 +70,15 @@ class OCRTaskForm(forms.Form):
             attrs={"placeholder": "Paste your API key here", "type": "password"}
         ),
         required=False,
+    )
+    sponsor_name = forms.CharField(
+        widget=forms.TextInput(attrs={"placeholder": "Name of the sponsor"}),
+        max_length=255,
+    )
+    sponsor_concent = forms.BooleanField(
+        label="Allow the results to be used by BDRC and OpenPecha for improving this service.",
+        initial=True,
+        required=True,
     )
 
     def clean_google_vision_api_key(self):
