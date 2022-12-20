@@ -9,7 +9,7 @@ from ocr_pipelines.config import ImportConfig as OcrImportConfig
 
 from data_pipeline_manager.pipelines.forms import OCR_ENGINES, OCRTaskForm
 from data_pipeline_manager.pipelines.models import BatchTask, PipelineTypes, Task
-from data_pipeline_manager.pipelines.tasks import run_ocr_import_pipelines
+from data_pipeline_manager.pipelines.tasks import OcrMetadata, run_ocr_import_pipelines
 
 
 class PipelineRunner:
@@ -26,6 +26,11 @@ class PipelineRunner:
             images_path=images_dir,
             ocr_outputs_path=ocr_outputs_dir,
         )
+        self.metadata = OcrMetadata(
+            pipeline_config=self.config,
+            sponsor=self.form.cleaned_data["sponsor_name"],
+            sponsor_consent=self.form.cleaned_data["sponsor_concent"],
+        )
 
     def create_batch(self) -> BatchTask:
         batch = BatchTask.objects.create(
@@ -33,6 +38,7 @@ class PipelineRunner:
             inputs=self.form.cleaned_data["inputs"],
             pipeline_type=PipelineTypes.IMPORT,
             pipeline_config=self.config.to_dict(),
+            metadata=self.metadata.to_dict(),
         )
         return batch
 
@@ -49,6 +55,7 @@ class PipelineRunner:
             task_id,
             bdrc_scan_id=input,
             config_dict=self.config.to_dict(),
+            metadata_dict=self.metadata.to_dict(),
         )
         return celery_task_id
 

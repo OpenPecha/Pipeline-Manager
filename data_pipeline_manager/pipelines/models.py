@@ -12,6 +12,7 @@ class BatchTask(models.Model):
     inputs = models.TextField(max_length=10000)
     started_on = models.DateTimeField(auto_now_add=True)
     pipeline_config = models.JSONField()
+    metadata = models.JSONField(null=True, blank=True)
     pipeline_type = models.CharField(
         max_length=1, choices=PipelineTypes.choices, default=PipelineTypes.IMPORT
     )
