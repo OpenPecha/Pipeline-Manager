@@ -12,6 +12,8 @@ class TestOCRTaskForm:
             "model_type": "builtin/stable",
             "language_hint": "bo",
             "google_vision_api_key": '{"api-key": "fake-api-key"}',
+            "sponsor_name": "Test Sponsor",
+            "sponsor_concent": True,
         }
 
         form = OCRTaskForm(data=data)

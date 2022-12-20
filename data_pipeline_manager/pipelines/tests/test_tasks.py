@@ -6,7 +6,7 @@ from celery.result import EagerResult
 from ocr_pipelines.config import ImportConfig as OcrImportConfig
 
 from data_pipeline_manager.pipelines.models import Task, TaskStatus
-from data_pipeline_manager.pipelines.tasks import run_ocr_import_pipelines
+from data_pipeline_manager.pipelines.tasks import OcrMetadata, run_ocr_import_pipelines
 from data_pipeline_manager.pipelines.tests.factories import TaskFactory
 
 pytestmark = pytest.mark.django_db
@@ -27,6 +27,9 @@ def test_run_ocr_import_pipelines(mock_ocr_import_pipeline, settings):
         images_path=Path("/tmp/images"),
         ocr_outputs_path=Path("/tmp/ocr_outputs"),
     )
+    metadata = OcrMetadata(
+        pipeline_config=config, sponsor="sponsor", sponsor_consent=True
+    )
     task = TaskFactory()
     settings.CELERY_TASK_ALWAYS_EAGER = True
 
@@ -38,6 +41,7 @@ def test_run_ocr_import_pipelines(mock_ocr_import_pipeline, settings):
         pipeline_task_id=task.id,
         bdrc_scan_id=bdrc_scan_id,
         config_dict=config.to_dict(),
+        metadata_dict=metadata.to_dict(),
     )
 
     # verify
