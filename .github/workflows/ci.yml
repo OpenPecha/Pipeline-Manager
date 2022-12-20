@@ -69,4 +69,5 @@ jobs:
           script: |
             cd Data-Pipeline-Manager
             git pull
+            make prod-migrate
             make deploy
