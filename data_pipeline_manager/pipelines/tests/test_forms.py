@@ -11,7 +11,7 @@ class TestOCRTaskForm:
             "ocr_engine": "GV",
             "model_type": "builtin/stable",
             "language_hint": "bo",
-            "google_vision_api_key": '{"api-key": "fake-api-key"}',
+            "gcloud_service_account_key": '{"api-key": "fake-api-key"}',
             "sponsor_name": "Test Sponsor",
             "sponsor_concent": True,
         }
@@ -20,5 +20,7 @@ class TestOCRTaskForm:
 
         assert form.is_valid()
 
-        data["google_vision_api_key"] = json.loads(data["google_vision_api_key"])
+        data["gcloud_service_account_key"] = json.loads(
+            data["gcloud_service_account_key"]
+        )
         assert form.cleaned_data == data
