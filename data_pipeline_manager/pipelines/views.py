@@ -22,7 +22,7 @@ class PipelineRunner:
             ocr_engine=OCR_ENGINES[self.form.cleaned_data["ocr_engine"]],
             model_type=self.form.cleaned_data["model_type"],
             lang_hint=form.cleaned_data["language_hint"],
-            credentials=self.form.cleaned_data["google_vision_api_key"],
+            credentials=self.form.cleaned_data["gcloud_service_account_key"],
             images_path=images_dir,
             ocr_outputs_path=ocr_outputs_dir,
         )

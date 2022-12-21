@@ -64,8 +64,8 @@ class OCRTaskForm(forms.Form):
         required=False,
         initial="Auto",
     )
-    google_vision_api_key = forms.CharField(
-        label="Google Vision API Key",
+    gcloud_service_account_key = forms.CharField(
+        label="Google Cloud Service Account Key",
         widget=forms.TextInput(
             attrs={"placeholder": "Paste your API key here", "type": "password"}
         ),
@@ -81,17 +81,17 @@ class OCRTaskForm(forms.Form):
         required=True,
     )
 
-    def clean_google_vision_api_key(self):
+    def clean_gcloud_service_account_key(self):
         ocr_engine = self.cleaned_data.get("ocr_engine")
-        api_key_str = self.cleaned_data.get("google_vision_api_key")
+        api_key_str = self.cleaned_data.get("gcloud_service_account_key")
         if ocr_engine == "GV":
             if not api_key_str:
                 raise forms.ValidationError(
-                    "Google Vision API Key is required for Google Vision OCR Engine",
+                    "Gcloud Service Account key is required for Google Vision OCR Engine",
                 )
 
         try:
             api_key_dict = json.loads(api_key_str)
         except Exception:
-            raise forms.ValidationError("Google Vision API Key is not valid JSON")
+            raise forms.ValidationError("Gcloud Service Account Key is not valid JSON")
         return api_key_dict
