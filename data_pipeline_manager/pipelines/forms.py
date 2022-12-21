@@ -76,7 +76,7 @@ class OCRTaskForm(forms.Form):
         max_length=255,
     )
     sponsor_concent = forms.BooleanField(
-        label="Allow the results to be used by BDRC and OpenPecha for improving this service.",
+        label="Allow BDRC and OpenPecha to use the results for improving this service.",
         initial=True,
         required=True,
     )
