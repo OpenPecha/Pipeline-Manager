@@ -19,7 +19,9 @@
         <div class="col-2 text-muted">Result</div>
         <div class="col fw-light">
             {% if task.result %}
-                {{ task.result }}
+                <a href="{{ task.result.pecha_url }}" target="_blank">
+                    {{ task.result.pecha_id }}
+                </a>
             {% else %}
                 <span>-</span>
             {% endif %}

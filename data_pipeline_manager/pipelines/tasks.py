@@ -33,7 +33,7 @@ def run_ocr_import_pipelines(
     try:
         config = OcrImportConfig.from_dict(config_dict)
         metadata = OcrMetadata.from_dict(metadata_dict)
-        pecha_id = ocr_import_pipeline(
+        result = ocr_import_pipeline(
             bdrc_scan_id=bdrc_scan_id,
             config=config,
             metadata=metadata,
@@ -47,5 +47,5 @@ def run_ocr_import_pipelines(
     task = Task.objects.get(id=pipeline_task_id)
     task.status = TaskStatus.SUCCESS
     task.completed_on = datetime.now()
-    task.result = pecha_id
+    task.result = result
     task.save()
