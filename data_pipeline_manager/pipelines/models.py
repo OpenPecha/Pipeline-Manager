@@ -51,7 +51,6 @@ class Task(models.Model):
     started_on = models.DateTimeField(auto_now_add=True)
     completed_on = models.DateTimeField(null=True, blank=True)
     input = models.CharField(max_length=255, null=True, blank=True)
-    pipeline_config = models.JSONField(null=True, blank=True)
     result = models.JSONField(null=True, blank=True)
     error = models.TextField(null=True, blank=True)
     status = models.CharField(

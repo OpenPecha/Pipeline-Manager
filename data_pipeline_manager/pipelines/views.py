@@ -46,7 +46,6 @@ class PipelineRunner:
         task = Task.objects.create(
             batch=batch,
             input=input_,
-            pipeline_config=self.config.to_dict(),
         )
         return task
 
