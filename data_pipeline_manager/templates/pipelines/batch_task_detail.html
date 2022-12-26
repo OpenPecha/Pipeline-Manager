@@ -65,7 +65,9 @@
                 <td>{{ task.input }}</td>
                 <td>
                     {% if task.result %}
-                        {{ task.result }}
+                        <a href="{{ task.result.pecha_url }}" target="_blank">
+                            {{ task.result.pecha_id }}
+                        </a>
                     {% else %}
                         <span>-</span>
                     {% endif %}
