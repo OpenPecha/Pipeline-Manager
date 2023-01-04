@@ -1,6 +1,8 @@
 import traceback
 from datetime import datetime
 
+import requests
+from django.utils import timezone
 from ocr_pipelines.config import ImportConfig as OcrImportConfig
 from ocr_pipelines.metadata import Metadata
 from ocr_pipelines.pipelines import import_pipeline as ocr_import_pipeline
@@ -46,6 +48,59 @@ def run_ocr_import_pipelines(
         return
     task = Task.objects.get(id=pipeline_task_id)
     task.status = TaskStatus.SUCCESS
-    task.completed_on = datetime.now()
+    task.completed_on = timezone.now()
     task.result = result
     task.save()
+
+
+def get_repos(page: int) -> list:
+    """Get the OpenPecha-Data repos of a `page`."""
+    url = f"https://api.github.com/orgs/OpenPecha-Data/repos?sort=created&page={page}"
+    response = requests.get(url)
+    return response.json()
+
+
+def get_repo_created_datetime(repo: dict) -> datetime:
+    """Get the created datetime of a repo in UTC."""
+    d = datetime.fromisoformat(repo["created_at"][:-1])
+    return d.replace(tzinfo=timezone.utc)
+
+
+def get_pecha_id_from_bdrc_scan_id(bdrc_scan_id: str, task_started: datetime) -> str:
+    """Get the pecha id from a BDRC scan id."""
+    created_datetime_of_first_repo_of_the_page = None
+    page = 1
+    while True:
+        repos = get_repos(page)
+        created_datetime_of_first_repo_of_the_page = get_repo_created_datetime(repos[0])
+        if created_datetime_of_first_repo_of_the_page < task_started:
+            return None, None
+        for repo in repos:
+            repo_desc = repo["description"]
+            if repo_desc and bdrc_scan_id in repo_desc:
+                return repo["name"], get_repo_created_datetime(repo)
+        page += 1
+
+
+def get_pecha_result(pecha_id: str) -> dict:
+    return {
+        "pecha_id": pecha_id,
+        "pecha_url": f"https://github.com/OpenPecha-Data/{pecha_id}",
+    }
+
+
+@celery_app.task()
+def handle_broken_tasks():
+    """Handle a broken tasks."""
+    running_tasks = Task.objects.filter(status=TaskStatus.RUNNING)
+    for task in running_tasks:
+        pecha_id, pecha_created_datetime = get_pecha_id_from_bdrc_scan_id(
+            task.input, task.started_on
+        )
+        if not pecha_id:
+            continue
+
+        task.status = TaskStatus.SUCCESS
+        task.completed_on = pecha_created_datetime
+        task.result = get_pecha_result(pecha_id)
+        task.save()
