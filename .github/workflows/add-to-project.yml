@@ -1,4 +1,4 @@
-name: Add bugs to toolkit issue project
+name: Add To GitHub projects
   
 on:
   issues:
