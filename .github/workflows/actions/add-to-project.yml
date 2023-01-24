@@ -1,21 +1,6 @@
 name: Add To GitHub projects
 
-runs:
-  using: 'node16'
-  main: 'dist/index.js'
-  
-  
-  
-steps:
-  - name: Save state
-    id: step_one
-    run: |
-      echo "{name}={value}" >> $GITHUB_STATE
-  - name: Set output
-    id: step_two
-    run: |
-      echo "{name}={value}" >> $GITHUB_OUTPUT
-  
+
 on:
   issues:
     types:
