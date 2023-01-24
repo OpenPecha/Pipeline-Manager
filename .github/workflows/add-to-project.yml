@@ -6,6 +6,11 @@ on:
       - opened
 
 jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run pre-commit
+        uses: pre-commit/action@v2.0.3
   add-to-project:
     name: Add issue to project
     runs-on: ubuntu-latest
