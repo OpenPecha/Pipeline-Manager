@@ -1,5 +1,4 @@
 name: Add bugs to toolkit issue project
-uses: actions/add-to-project@v0.4.0
   
 on:
   issues:
@@ -13,8 +12,6 @@ jobs:
     steps:
       - uses: actions/add-to-project@RELEASE_VERSION
         with:
-          # You can target a repository in a different organization
-          # to the issue
           project-url: https://github.com/orgs/OpenPecha/projects/22
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
           labeled: bug
