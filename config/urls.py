@@ -8,15 +8,13 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
-    path("", RedirectView.as_view(url="/pipelines"), name="home"),
+    path("", RedirectView.as_view(url="/ocr"), name="home"),
     path(
         "catalog/",
         TemplateView.as_view(template_name="pages/catalog.html"),
         name="catalog",
     ),
-    path(
-        "pipelines/", include("data_pipeline_manager.pipelines.urls"), name="pipelines"
-    ),
+    path("ocr/", include("data_pipeline_manager.pipelines.urls"), name="pipelines"),
     path("maintenance-mode/", include("maintenance_mode.urls")),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
