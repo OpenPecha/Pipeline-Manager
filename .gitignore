@@ -278,3 +278,4 @@ data_pipeline_manager/media/
 .envs/*
 !.envs/.local/
 data
+maintenance_mode_state.txt

@@ -17,6 +17,7 @@ urlpatterns = [
     path(
         "pipelines/", include("data_pipeline_manager.pipelines.urls"), name="pipelines"
     ),
+    path("maintenance-mode/", include("maintenance_mode.urls")),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
