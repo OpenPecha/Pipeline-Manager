@@ -41,12 +41,33 @@ OCR_LANGUAGES_CHOICES.insert(0, ("", "Auto")),
 
 
 class OCRTaskForm(forms.Form):
+    sponsor_name = forms.CharField(
+        widget=forms.TextInput(attrs={"placeholder": "Name of the sponsor"}),
+        max_length=255,
+    )
+    gcloud_service_account_key = forms.CharField(
+        label="Google Cloud Service Account Key (JSON)",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Paste your Service Account key here",
+                "type": "password",
+            }
+        ),
+        required=False,
+    )
+    sponsor_concent = forms.BooleanField(
+        label="Allow BDRC and OpenPecha to use the results for improving this service.",
+        initial=True,
+        required=True,
+    )
 
     name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Name for the batch"}),
+        label="Name for the batch",
+        widget=forms.TextInput(attrs={"placeholder": "batch-01"}),
         max_length=255,
     )
     inputs = forms.CharField(
+        label="BDRC Scan Ids",
         widget=forms.Textarea(
             attrs={
                 "placeholder": "One work id per line, for eg:\nW30305\nMW14081\nMW30303"
@@ -63,22 +84,6 @@ class OCRTaskForm(forms.Form):
         choices=OCR_LANGUAGES_CHOICES,
         required=False,
         initial="Auto",
-    )
-    gcloud_service_account_key = forms.CharField(
-        label="Google Cloud Service Account Key",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Paste your API key here", "type": "password"}
-        ),
-        required=False,
-    )
-    sponsor_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Name of the sponsor"}),
-        max_length=255,
-    )
-    sponsor_concent = forms.BooleanField(
-        label="Allow BDRC and OpenPecha to use the results for improving this service.",
-        initial=True,
-        required=True,
     )
 
     def clean_gcloud_service_account_key(self):
