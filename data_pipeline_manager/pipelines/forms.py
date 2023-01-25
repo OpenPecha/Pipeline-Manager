@@ -10,9 +10,9 @@ OCR_ENGINES = {
 }
 
 OCR_MODEL_CHOICES = (
-    ("builtin/stable", "builtin/stable"),
-    ("builtin/latest", "builtin/latest"),
     ("builtin/weekly", "builtin/weekly"),
+    ("builtin/latest", "builtin/latest"),
+    ("builtin/stable", "builtin/stable"),
 )
 
 OCR_LANGUAGES_CHOICES = [
