@@ -1,6 +1,7 @@
 import json
 
 from django import forms
+from django.utils.safestring import mark_safe
 from ocr_pipelines.engines import GoogleVisionEngine
 
 OCR_ENGINE_CHOICES = (("GV", "Google Vision"),)
@@ -41,36 +42,35 @@ OCR_LANGUAGES_CHOICES.insert(0, ("", "Auto")),
 
 
 class OCRTaskForm(forms.Form):
-    sponsor_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Name of the sponsor"}),
+    label_suffix = ""
+
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={"placeholder": "example@address.com"}),
         max_length=255,
     )
     gcloud_service_account_key = forms.CharField(
-        label="Google Cloud Service Account Key (JSON)",
+        label=mark_safe(
+            "Google Cloud Service JSON key file (<a href='https://openpecha.org/tools/cloud-vision-key/' target='_blank'>how to get one</a>)"  # noqa
+        ),
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Paste your Service Account key here",
+                "placeholder": "Open file and paste contents here",
                 "type": "password",
             }
         ),
         required=False,
     )
-    sponsor_concent = forms.BooleanField(
-        label="Allow BDRC and OpenPecha to use the results for improving this service.",
-        initial=True,
-        required=True,
-    )
-
     name = forms.CharField(
-        label="Name for the batch",
-        widget=forms.TextInput(attrs={"placeholder": "batch-01"}),
+        label="Name",
+        widget=forms.TextInput(attrs={"placeholder": "Name of the batch"}),
         max_length=255,
     )
     inputs = forms.CharField(
-        label="BDRC Scan Ids",
+        label="Input",
         widget=forms.Textarea(
             attrs={
-                "placeholder": "One work id per line, for eg:\nW30305\nMW14081\nMW30303"
+                "placeholder": "One BDRC Scan ID per line, for eg:\nW30305\nW8CZ61\nW14322"
             }
         ),
         required=True,
@@ -84,6 +84,18 @@ class OCRTaskForm(forms.Form):
         choices=OCR_LANGUAGES_CHOICES,
         required=False,
         initial="Auto",
+    )
+    sponsor_name = forms.CharField(
+        label="Sponsor Name",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Sponsor's name will be added to OCR metadata"}
+        ),
+        max_length=255,
+    )
+    sponsor_concent = forms.BooleanField(
+        label="Allow BDRC and OpenPecha to use the results to improve this service.",
+        initial=True,
+        required=True,
     )
 
     def clean_gcloud_service_account_key(self):
