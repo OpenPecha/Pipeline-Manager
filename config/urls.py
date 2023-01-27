@@ -9,6 +9,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path("", RedirectView.as_view(url="/pipelines"), name="home"),
+    path("pipelines/", RedirectView.as_view(url="/ocr"), name="home"),
     path(
         "catalog/",
         TemplateView.as_view(template_name="pages/catalog.html"),
