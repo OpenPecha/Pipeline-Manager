@@ -70,7 +70,7 @@ class OCRTaskForm(forms.Form):
         label="Input",
         widget=forms.Textarea(
             attrs={
-                "placeholder": "One BDRC Scan ID per line, for eg:\nW30305\nW8CZ61\nW14322"
+                "placeholder": "One BDRC Scan ID per line, for e.g.:\nW30305\nW8CZ61\nW14322"
             }
         ),
         required=True,
