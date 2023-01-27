@@ -6,12 +6,13 @@ from data_pipeline_manager.pipelines.forms import OCRTaskForm
 class TestOCRTaskForm:
     def test_form_valid(self):
         data = {
+            "email": "example@address.com",
+            "gcloud_service_account_key": '{"api-key": "fake-api-key"}',
             "name": "Test OCR Task",
             "inputs": "01\n02\n03",
             "ocr_engine": "GV",
             "model_type": "builtin/stable",
             "language_hint": "bo",
-            "gcloud_service_account_key": '{"api-key": "fake-api-key"}',
             "sponsor_name": "Test Sponsor",
             "sponsor_concent": True,
         }

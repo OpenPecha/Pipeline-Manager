@@ -1,6 +1,7 @@
 import json
 
 from django import forms
+from django.utils.safestring import mark_safe
 from ocr_pipelines.engines import GoogleVisionEngine
 
 OCR_ENGINE_CHOICES = (("GV", "Google Vision"),)
@@ -10,9 +11,9 @@ OCR_ENGINES = {
 }
 
 OCR_MODEL_CHOICES = (
-    ("builtin/stable", "builtin/stable"),
-    ("builtin/latest", "builtin/latest"),
     ("builtin/weekly", "builtin/weekly"),
+    ("builtin/latest", "builtin/latest"),
+    ("builtin/stable", "builtin/stable"),
 )
 
 OCR_LANGUAGES_CHOICES = [
@@ -41,15 +42,35 @@ OCR_LANGUAGES_CHOICES.insert(0, ("", "Auto")),
 
 
 class OCRTaskForm(forms.Form):
+    required_css_class = "ocr-task-form-field"
 
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={"placeholder": "example@address.com"}),
+        max_length=255,
+    )
+    gcloud_service_account_key = forms.CharField(
+        label=mark_safe(
+            "Google Cloud Service JSON key file (<a href='https://openpecha.org/tools/cloud-vision-key/' target='_blank'>how to get one</a>)"  # noqa
+        ),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Open file and paste contents here",
+                "type": "password",
+            }
+        ),
+        required=False,
+    )
     name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Name for the batch"}),
+        label="Name",
+        widget=forms.TextInput(attrs={"placeholder": "Name of the batch"}),
         max_length=255,
     )
     inputs = forms.CharField(
+        label="Input",
         widget=forms.Textarea(
             attrs={
-                "placeholder": "One work id per line, for eg:\nW30305\nMW14081\nMW30303"
+                "placeholder": "One BDRC Scan ID per line, for eg:\nW30305\nW8CZ61\nW14322"
             }
         ),
         required=True,
@@ -64,19 +85,15 @@ class OCRTaskForm(forms.Form):
         required=False,
         initial="Auto",
     )
-    gcloud_service_account_key = forms.CharField(
-        label="Google Cloud Service Account Key",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Paste your API key here", "type": "password"}
-        ),
-        required=False,
-    )
     sponsor_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Name of the sponsor"}),
+        label="Sponsor Name",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Sponsor's name will be added to OCR metadata"}
+        ),
         max_length=255,
     )
     sponsor_concent = forms.BooleanField(
-        label="Allow BDRC and OpenPecha to use the results for improving this service.",
+        label="Allow BDRC and OpenPecha to use the results to improve this service.",
         initial=True,
         required=True,
     )
