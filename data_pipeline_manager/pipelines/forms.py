@@ -42,7 +42,7 @@ OCR_LANGUAGES_CHOICES.insert(0, ("", "Auto")),
 
 
 class OCRTaskForm(forms.Form):
-    label_suffix = ""
+    required_css_class = "ocr-task-form-field"
 
     email = forms.EmailField(
         label="Email",
