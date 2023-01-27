@@ -15,9 +15,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="pages/catalog.html"),
         name="catalog",
     ),
-    path(
-        "pipelines/", include("data_pipeline_manager.pipelines.urls"), name="pipelines"
-    ),
+    path("ocr/", include("data_pipeline_manager.pipelines.urls"), name="pipelines"),
     path("maintenance-mode/", include("maintenance_mode.urls")),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
