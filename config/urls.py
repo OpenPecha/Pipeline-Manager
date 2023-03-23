@@ -7,9 +7,12 @@ from django.views.generic import RedirectView, TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from data_pipeline_manager.github_bot.views import GitHubWebhookView
+
 urlpatterns = [
     path("", RedirectView.as_view(url="/pipelines"), name="home"),
     path("pipelines/", RedirectView.as_view(url="/ocr"), name="home"),
+    path("github-webhook/", GitHubWebhookView.as_view()),
     path(
         "catalog/",
         TemplateView.as_view(template_name="pages/catalog.html"),
