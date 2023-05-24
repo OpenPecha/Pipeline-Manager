@@ -39,11 +39,13 @@
         <div class="col-2 text-muted">Status</div>
         <div class="col fw-light">
             {% if task.get_status_display == 'Success' %}
-                <span class="badge bg-success fw-light">{{ task.get_status_display }}</span>
+                <span class="badge bg-success-subtle fw-light">{{ task.get_status_display }}</span>
             {% elif task.get_status_display == 'Running' %}
                 <span class="badge bg-warning fw-light">{{ task.get_status_display }}</span>
             {% elif task.get_status_display == 'Failure' %}
                 <span class="badge bg-danger fw-light">{{ task.get_status_display }}</span>
+            {% elif task.get_status_display == 'Cancelled' %}
+                <span class="badge bg-secondary fw-light">{{ task.get_status_display }}</span>
             {% endif %}
         </div>
     </div>

@@ -9,7 +9,12 @@ from ocr_pipelines.config import ImportConfig as OcrImportConfig
 
 from config import celery_app
 from data_pipeline_manager.pipelines.forms import OCR_ENGINES, OCRTaskForm
-from data_pipeline_manager.pipelines.models import BatchTask, PipelineTypes, Task
+from data_pipeline_manager.pipelines.models import (
+    BatchTask,
+    PipelineTypes,
+    Task,
+    TaskStatus,
+)
 from data_pipeline_manager.pipelines.tasks import OcrMetadata, run_ocr_import_pipelines
 
 
@@ -130,13 +135,14 @@ class TaskSearchView(View):
 task_search_view = TaskSearchView.as_view()
 
 
-class StopTaskView(View):
+class TaskCancelView(View):
     def post(self, request, *args, **kwargs):
         task_id = request.POST.get("task_id")
         task = Task.objects.get(pk=task_id)
         celery_app.control.revoke(task.celery_task_id, terminate=True)
-        task.status = Task.Status.STOPPED
+        task.status = TaskStatus.CANCELLED
+        task.save()
         return redirect("pipelines:task_detail", pk=task_id)
 
 
-task_stop_view = StopTaskView.as_view()
+cancel_task_view = TaskCancelView.as_view()

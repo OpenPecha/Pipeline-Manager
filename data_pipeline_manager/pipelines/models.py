@@ -41,7 +41,7 @@ class TaskStatus(models.TextChoices):
     RUNNING = "R", _("Running")
     SUCCESS = "S", _("Success")
     FAILURE = "F", _("Failure")
-    STOPPED = "ST", _("Stopped")
+    CANCELLED = "C", _("Cancelled")
 
 
 class Task(models.Model):
