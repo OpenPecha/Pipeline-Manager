@@ -2,11 +2,12 @@ from pathlib import Path
 
 from django import forms
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View, generic
 from ocr_pipelines.config import ImportConfig as OcrImportConfig
 
+from config import celery_app
 from data_pipeline_manager.pipelines.forms import OCR_ENGINES, OCRTaskForm
 from data_pipeline_manager.pipelines.models import BatchTask, PipelineTypes, Task
 from data_pipeline_manager.pipelines.tasks import OcrMetadata, run_ocr_import_pipelines
@@ -127,3 +128,15 @@ class TaskSearchView(View):
 
 
 task_search_view = TaskSearchView.as_view()
+
+
+class StopTaskView(View):
+    def post(self, request, *args, **kwargs):
+        task_id = request.POST.get("task_id")
+        task = Task.objects.get(pk=task_id)
+        celery_app.control.revoke(task.celery_task_id, terminate=True)
+        task.status = Task.Status.STOPPED
+        return redirect("pipelines:task_detail", pk=task_id)
+
+
+task_stop_view = StopTaskView.as_view()

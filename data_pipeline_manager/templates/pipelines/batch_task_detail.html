@@ -90,6 +90,9 @@
                     {% endif %}
                 </td>
                 <td class="text-end">
+                    {% if task.get_status_display == 'Running' %}
+                        <a class="btn btn-danger btn-sm" href="{% url 'pipelines:task_stop' task.id %}">Stop</a>
+                    {% endif %}
                     <a class="btn btn-info btn-sm" href="{% url 'pipelines:task_detail' task.id %}">Details</a>
                 </td>
             </tr>

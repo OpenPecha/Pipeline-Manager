@@ -41,6 +41,7 @@ class TaskStatus(models.TextChoices):
     RUNNING = "R", _("Running")
     SUCCESS = "S", _("Success")
     FAILURE = "F", _("Failure")
+    STOPPED = "ST", _("Stopped")
 
 
 class Task(models.Model):
@@ -54,7 +55,7 @@ class Task(models.Model):
     result = models.JSONField(null=True, blank=True)
     error = models.TextField(null=True, blank=True)
     status = models.CharField(
-        max_length=1, choices=TaskStatus.choices, default=TaskStatus.RUNNING
+        max_length=2, choices=TaskStatus.choices, default=TaskStatus.RUNNING
     )
 
     def __str__(self):
