@@ -1,4 +1,4 @@
-run:
+local-run:
 	# make translate
 	docker-compose -f local.yml up
 
@@ -13,6 +13,9 @@ stop:
 
 prod-stop:
 	docker-compose -f production.yml down
+
+django-manage:
+	docker-compose -f local.yml run --rm django python manage.py $(args)
 
 migrate:
 	docker-compose -f local.yml run --rm django python manage.py makemigrations
