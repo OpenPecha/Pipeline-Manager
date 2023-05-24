@@ -4,7 +4,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import View, generic
 from ocr_pipelines.config import ImportConfig as OcrImportConfig
 
 from data_pipeline_manager.pipelines.forms import OCR_ENGINES, OCRTaskForm
@@ -109,3 +109,21 @@ class TaskDetailView(generic.DetailView):
 
 
 task_detail_view = TaskDetailView.as_view()
+
+
+class TaskSearchView(View):
+    template_name = "pipelines/task_search.html"
+
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get("q", "")
+        if search_term:
+            tasks = Task.objects.filter(input__icontains=search_term)
+        else:
+            tasks = Task.objects.all().order_by("-started_on")[
+                :10
+            ]  # Get the 10 most recent tasks
+        context = {"tasks": tasks}
+        return render(request, self.template_name, context)
+
+
+task_search_view = TaskSearchView.as_view()
