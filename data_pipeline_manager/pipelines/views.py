@@ -128,7 +128,7 @@ class TaskSearchView(View):
             tasks = Task.objects.all().order_by("-started_on")[
                 :10
             ]  # Get the 10 most recent tasks
-        context = {"tasks": tasks}
+        context = {"tasks": tasks, "q": search_term}
         return render(request, self.template_name, context)
 
 

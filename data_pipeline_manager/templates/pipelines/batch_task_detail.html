@@ -92,14 +92,14 @@
                     {% endif %}
                 </td>
                 <td class="d-flex justify-content-end">
-                    <a class="btn btn-outline-info btn-sm" href="{% url 'pipelines:task_detail' task.id %}">Details</a>
                     {% if task.get_status_display == 'Running' %}
-                        <form class="ms-2" method="POST" action="{% url 'pipelines:cancel_task' %}">
+                        <form  method="POST" action="{% url 'pipelines:cancel_task' %}">
                             {% csrf_token %}
                             <input type="hidden" name="task_id" value="{{ task.id }}">
                             <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
                         </form>
                     {% endif %}
+                    <a class="ms-2 btn btn-outline-info btn-sm" href="{% url 'pipelines:task_detail' task.id %}">Details</a>
                 </td>
             </tr>
         {% endfor %}

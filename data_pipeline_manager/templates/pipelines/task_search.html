@@ -46,6 +46,8 @@
                           <span class="badge bg-warning fw-light">{{ task.get_status_display }}</span>
                       {% elif task.get_status_display == 'Failure' %}
                           <span class="badge bg-danger fw-light">{{ task.get_status_display }}</span>
+                      {% elif task.get_status_display == 'Cancelled' %}
+                          <span class="badge bg-secondary fw-light">{{ task.get_status_display }}</span>
                       {% endif %}
                   </td>
                   <td>{{ task.started_on }}</td>
@@ -56,13 +58,30 @@
                           <span>-</span>
                       {% endif %}
                   </td>
-                  <td class="text-end">
-                      <a class="btn btn-info btn-sm" href="{% url 'pipelines:task_detail' task.id %}">Details</a>
+                  <td class="d-flex justify-content-end">
+                    {% if task.get_status_display == 'Running' %}
+                        <form method="POST" action="{% url 'pipelines:cancel_task' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>
+                        </form>
+                    {% endif %}
+                    <a class="ms-2 btn btn-outline-info btn-sm" href="{% url 'pipelines:task_detail' task.id %}">Details</a>
                   </td>
               </tr>
           {% endfor %}
           </tbody>
       </table>
+    {% else %}
+      {% if q %}
+        <div class="alert alert-warning" role="alert">
+          No tasks found for <strong>{{ q }}</strong>
+        </div>
+      {% else %}
+        <div class="alert alert-warning" role="alert">
+          No tasks found
+        </div>
+      {% endif %}
     {% endif %}
     </div>
 </div>
