@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # git for installing python pkg from github repo
   git-all
 
+# setup git config
+RUN git config --global init.defaultBranch main
+
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
 
