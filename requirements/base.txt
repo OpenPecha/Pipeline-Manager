@@ -25,4 +25,4 @@ drf-spectacular==0.24.0  # https://github.com/tfranzel/drf-spectacular
 django-maintenance-mode==0.18.0  # https://github.com/fabiocaccamo/django-maintenance-mode
 
 # OpenPecha
-https://github.com/OpenPecha/OCR-Pipelines/archive/v0.1.11.tar.gz
+https://github.com/OpenPecha/OCR-Pipelines/archive/v0.1.12.tar.gz
